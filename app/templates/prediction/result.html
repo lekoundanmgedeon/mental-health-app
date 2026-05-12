@@ -1,0 +1,86 @@
+{% extends "base.html" %}
+{% block content %}
+<div class="d-flex flex-wrap justify-content-between align-items-center gap-3 mb-4">
+    <div>
+        <h1 class="h2 fw-bold mb-1">Screening result</h1>
+        <p class="text-muted mb-0">Generated on {{ prediction.created_at.strftime('%d %b %Y, %H:%M') }}</p>
+    </div>
+    <a href="{{ url_for('prediction.new_prediction') }}" class="btn btn-primary">New prediction</a>
+</div>
+
+<div class="row g-4">
+    <div class="col-lg-5">
+        <div class="result-card card border-0 shadow-sm rounded-4 h-100">
+            <div class="card-body p-4">
+                <p class="text-muted mb-1">Predicted outcome</p>
+                <h2 class="fw-bold mb-3">{{ prediction.predicted_class }}</h2>
+                <div class="score-circle mx-auto my-4">
+                    <span>{{ prediction.overall_score|round|int }}</span>
+                    <small>% risk</small>
+                </div>
+                <p class="text-muted mb-0">{{ explanation }}</p>
+            </div>
+        </div>
+    </div>
+
+    <div class="col-lg-7">
+        <div class="card border-0 shadow-sm rounded-4 h-100">
+            <div class="card-body p-4">
+                <h5 class="fw-bold mb-3">Prediction probabilities</h5>
+                <canvas id="probabilityChart" height="140"></canvas>
+                <div class="mt-4">
+                    {% for label, value in probabilities.items() %}
+                    <div class="mb-3">
+                        <div class="d-flex justify-content-between small mb-1">
+                            <span>{{ label }}</span>
+                            <span>{{ value }}%</span>
+                        </div>
+                        <div class="progress">
+                            <div class="progress-bar" style="width: {{ value }}%"></div>
+                        </div>
+                    </div>
+                    {% endfor %}
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+<div class="row g-4 mt-1">
+    <div class="col-lg-7">
+        <div class="card border-0 shadow-sm rounded-4">
+            <div class="card-body p-4">
+                <h5 class="fw-bold mb-3"><i class="bi bi-lightbulb text-warning me-2"></i>Personalized recommendations</h5>
+                <ul class="recommendation-list">
+                    {% for item in recommendations['items'] %}
+                    <li>{{ item }}</li>
+                    {% endfor %}
+                </ul>
+            </div>
+        </div>
+    </div>
+    <div class="col-lg-5">
+        <div class="card border-0 shadow-sm rounded-4">
+            <div class="card-body p-4">
+                <h5 class="fw-bold mb-3"><i class="bi bi-clipboard-data text-primary me-2"></i>Submitted student profile</h5>
+                <div class="input-grid">
+                    {% for key, value in input_data.items() %}
+                    <div>
+                        <span>{{ key.replace('_', ' ')|title }}</span>
+                        <strong>{{ value }}</strong>
+                    </div>
+                    {% endfor %}
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+{% endblock %}
+
+{% block scripts %}
+<script>
+    window.probabilityLabels = {{ probabilities.keys()|list|tojson }};
+    window.probabilityValues = {{ probabilities.values()|list|tojson }};
+</script>
+<script src="{{ url_for('static', filename='js/charts.js') }}"></script>
+{% endblock %}

@@ -1,0 +1,82 @@
+{% extends "base.html" %}
+{% block content %}
+<div class="row align-items-center g-4 py-lg-5">
+    <div class="col-lg-6">
+        <span class="badge rounded-pill text-bg-primary-subtle text-primary border border-primary-subtle mb-3">
+            Student wellbeing prediction dashboard
+        </span>
+        <h1 class="display-5 fw-bold mb-3">Predict student stress levels with a clean ML-powered web app.</h1>
+        <p class="lead text-muted mb-4">
+            Collect academic and lifestyle information, run a pretrained machine learning model, display probabilities, and provide personalized recommendations.
+        </p>
+        <div class="d-flex flex-wrap gap-2">
+            {% if current_user.is_authenticated %}
+                <a href="{{ url_for('prediction.new_prediction') }}" class="btn btn-primary btn-lg">
+                    <i class="bi bi-activity me-2"></i>Start prediction
+                </a>
+                <a href="{{ url_for('dashboard.dashboard') }}" class="btn btn-outline-primary btn-lg">Open dashboard</a>
+            {% else %}
+                <a href="{{ url_for('auth.register') }}" class="btn btn-primary btn-lg">
+                    <i class="bi bi-person-plus me-2"></i>Create account
+                </a>
+                <a href="{{ url_for('auth.login') }}" class="btn btn-outline-primary btn-lg">Login</a>
+            {% endif %}
+        </div>
+        <div class="medical-disclaimer mt-4">
+            <i class="bi bi-info-circle me-2"></i>
+            This app is not a medical diagnosis tool. It provides educational support and encourages professional help when needed.
+        </div>
+    </div>
+    <div class="col-lg-6">
+        <div class="hero-card floating-card">
+            <div class="d-flex align-items-center justify-content-between mb-4">
+                <div>
+                    <p class="text-muted mb-1">Predicted status</p>
+                    <h3 class="fw-bold mb-0">Moderate Stress</h3>
+                </div>
+                <span class="hero-icon"><i class="bi bi-heart-pulse"></i></span>
+            </div>
+            <div class="mb-3">
+                <div class="d-flex justify-content-between small mb-1"><span>Low Stress</span><span>18%</span></div>
+                <div class="progress"><div class="progress-bar" style="width:18%"></div></div>
+            </div>
+            <div class="mb-3">
+                <div class="d-flex justify-content-between small mb-1"><span>Moderate Stress</span><span>48%</span></div>
+                <div class="progress"><div class="progress-bar bg-warning" style="width:48%"></div></div>
+            </div>
+            <div class="mb-3">
+                <div class="d-flex justify-content-between small mb-1"><span>High Stress</span><span>26%</span></div>
+                <div class="progress"><div class="progress-bar bg-danger" style="width:26%"></div></div>
+            </div>
+            <div>
+                <div class="d-flex justify-content-between small mb-1"><span>Critical Burnout</span><span>8%</span></div>
+                <div class="progress"><div class="progress-bar bg-dark" style="width:8%"></div></div>
+            </div>
+        </div>
+    </div>
+</div>
+
+<div class="row g-4 mt-2">
+    <div class="col-md-4">
+        <div class="feature-card h-100">
+            <i class="bi bi-shield-lock feature-icon"></i>
+            <h5>Secure accounts</h5>
+            <p>Authentication with password hashing, sessions, and protected routes.</p>
+        </div>
+    </div>
+    <div class="col-md-4">
+        <div class="feature-card h-100">
+            <i class="bi bi-graph-up-arrow feature-icon"></i>
+            <h5>ML predictions</h5>
+            <p>Integrates model, scaler, and encoder artifacts with clean preprocessing.</p>
+        </div>
+    </div>
+    <div class="col-md-4">
+        <div class="feature-card h-100">
+            <i class="bi bi-person-heart feature-icon"></i>
+            <h5>Smart support</h5>
+            <p>Dynamic recommendations and specialist cards for student wellbeing.</p>
+        </div>
+    </div>
+</div>
+{% endblock %}

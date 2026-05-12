@@ -1,0 +1,75 @@
+{% extends "base.html" %}
+{% block content %}
+<div class="d-flex flex-wrap justify-content-between align-items-center gap-3 mb-4">
+    <div>
+        <h1 class="h2 fw-bold mb-1">Dashboard</h1>
+        <p class="text-muted mb-0">Track your wellbeing predictions and recent stress score.</p>
+    </div>
+    <a href="{{ url_for('prediction.new_prediction') }}" class="btn btn-primary">
+        <i class="bi bi-plus-circle me-2"></i>New prediction
+    </a>
+</div>
+
+<div class="row g-4 mb-4">
+    <div class="col-md-4">
+        <div class="stat-card">
+            <span class="stat-icon bg-primary-subtle text-primary"><i class="bi bi-activity"></i></span>
+            <p class="text-muted mb-1">Total predictions</p>
+            <h3 class="fw-bold mb-0">{{ total_predictions }}</h3>
+        </div>
+    </div>
+    <div class="col-md-4">
+        <div class="stat-card">
+            <span class="stat-icon bg-success-subtle text-success"><i class="bi bi-speedometer2"></i></span>
+            <p class="text-muted mb-1">Average score</p>
+            <h3 class="fw-bold mb-0">{{ avg_score }}/100</h3>
+        </div>
+    </div>
+    <div class="col-md-4">
+        <div class="stat-card">
+            <span class="stat-icon bg-warning-subtle text-warning"><i class="bi bi-heart-pulse"></i></span>
+            <p class="text-muted mb-1">Latest result</p>
+            <h3 class="fw-bold mb-0">{{ last_prediction.predicted_class if last_prediction else 'No data' }}</h3>
+        </div>
+    </div>
+</div>
+
+<div class="card border-0 shadow-sm rounded-4">
+    <div class="card-body p-4">
+        <div class="d-flex justify-content-between align-items-center mb-3">
+            <h5 class="fw-bold mb-0">Recent predictions</h5>
+            <a href="{{ url_for('prediction.history') }}" class="btn btn-sm btn-outline-primary">View all</a>
+        </div>
+        {% if recent_predictions %}
+        <div class="table-responsive">
+            <table class="table align-middle">
+                <thead>
+                    <tr>
+                        <th>Date</th>
+                        <th>Result</th>
+                        <th>Score</th>
+                        <th></th>
+                    </tr>
+                </thead>
+                <tbody>
+                {% for item in recent_predictions %}
+                    <tr>
+                        <td>{{ item.created_at.strftime('%d %b %Y, %H:%M') }}</td>
+                        <td><span class="badge result-badge">{{ item.predicted_class }}</span></td>
+                        <td>{{ item.overall_score }}/100</td>
+                        <td class="text-end"><a href="{{ url_for('prediction.result', prediction_id=item.id) }}" class="btn btn-sm btn-outline-secondary">Open</a></td>
+                    </tr>
+                {% endfor %}
+                </tbody>
+            </table>
+        </div>
+        {% else %}
+            <div class="empty-state">
+                <i class="bi bi-clipboard2-pulse"></i>
+                <p>No prediction yet. Start with your first analysis.</p>
+                <a href="{{ url_for('prediction.new_prediction') }}" class="btn btn-primary">Create prediction</a>
+            </div>
+        {% endif %}
+    </div>
+</div>
+{% endblock %}
